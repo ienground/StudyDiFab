@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#282828</color>
+    <color name="black">#EAEAEA</color>
+
+    <color name="dark_blue">#EAEAEA</color>
+    <color name="dark_white_blue">#DECEF1</color>
+
+    <!-- Realtime Blur Overlay -->
+    <color name="blur_onboarding_textbox">#CC282828</color>
+    <color name="blur_background">#66282828</color>
+    <color name="blur_groupbox">#BB282828</color>
+
+</resources>

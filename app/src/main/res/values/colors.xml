@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFCDD2</color>
+    <color name="colorPrimaryDark">#CB9CA1</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccentDark">#FF87AA</color>
+    <color name="colorAccentAlpha">#55FF4081</color>
+    <color name="colorAccentTag">#33FF4081</color>
+    <color name="navigationBarColor">@color/colorAccentAlpha</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="dark_blue">#363B64</color>
+    <color name="dark_white_blue">#86749B</color>
+
+    <!-- Realtime Blur Overlay -->
+    <color name="blur_onboarding_textbox">#CCFFFFFF</color>
+    <color name="blur_background">#66FFFFFF</color>
+    <color name="blur_groupbox">#bbFFFFFF</color>
+</resources>

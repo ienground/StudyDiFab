@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="activity"
+            type="net.ienlab.study.activity.SplashActivity"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgBackground"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="?attr/colorAccent"
+            android:contentDescription="@string/this_app_name"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_icon"
+            android:contentDescription="@string/this_app_name"
+            app:tint="@android:color/white"
+            app:layout_constraintStart_toStartOf="@id/imgBackground"
+            app:layout_constraintEnd_toEndOf="@id/imgBackground"
+            app:layout_constraintTop_toTopOf="@id/imgBackground"
+            app:layout_constraintBottom_toBottomOf="@id/imgBackground" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            style="@style/Widget.MaterialComponents.CircularProgressIndicator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imgLogo"
+            app:layout_constraintBottom_toBottomOf="@id/devLogo" />
+
+        <ImageView
+            android:id="@+id/devLogo"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:src="@drawable/img_dev"
+            android:layout_marginBottom="30dp"
+            android:contentDescription="@string/dev_ienlab"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

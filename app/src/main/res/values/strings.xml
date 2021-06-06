@@ -1,0 +1,11 @@
+<resources>
+    <string name="this_app_name">Study</string>
+
+    <!--Preferences-->
+    <string name="dev_ienlab">Designed, Developed By ienlab\nInstagram : @ienlab</string>
+    <string name="settings">설정</string>
+    <string name="icon">아이콘</string>
+    <string name="title_snooze">졸았어요</string>
+    <string name="title_study">잘 공부하고 있어요!</string>
+
+</resources>
