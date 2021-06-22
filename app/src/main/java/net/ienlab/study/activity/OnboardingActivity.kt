@@ -76,7 +76,7 @@ class OnboardingActivity : AppCompatActivity() {
             if (flag) {
                 binding.tvConnectStatus.text = "connected to $name"
                 Log.d(TAG, "connectedThread start")
-                connectedThread = ConnectedThread(btSocket!!)
+                connectedThread = ConnectedThread(btSocket!!, this)
                 connectedThread?.start()
             }
         }

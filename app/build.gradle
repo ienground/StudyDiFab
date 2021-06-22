@@ -18,6 +18,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    applicationVariants.all { variant ->
+        variant.resValue "string", "versionName", variant.versionName
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -51,7 +55,6 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'com.android.volley:volley:1.2.0'
-    implementation 'com.anjlab.android.iab.v3:library:1.1.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"

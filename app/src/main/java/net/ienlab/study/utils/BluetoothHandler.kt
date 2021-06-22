@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import net.ienlab.study.activity.TAG
 import java.io.UnsupportedEncodingException
 

@@ -1,12 +1,16 @@
 package net.ienlab.study.utils
 
 import android.bluetooth.BluetoothSocket
+import android.content.Context
 import android.os.Handler
+import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import net.ienlab.study.activity.TAG
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
-class ConnectedThread(var socket: BluetoothSocket) : Thread() {
+class ConnectedThread(var socket: BluetoothSocket, var context: Context) : Thread() {
     var inputStream: InputStream?
     var outputStream: OutputStream?
     var handler: Handler?
@@ -54,6 +58,7 @@ class ConnectedThread(var socket: BluetoothSocket) : Thread() {
                             readBufferPosition = 0
 
                             handler!!.obtainMessage(0, str).sendToTarget()
+
                         } else {
                             readBuffer[readBufferPosition++] = data
                         }
