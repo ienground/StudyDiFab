@@ -11,11 +11,13 @@ import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import net.ienlab.study.R
 import net.ienlab.study.databinding.ActivitySettingsBinding
+import net.ienlab.study.utils.DeviceBTService
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -77,6 +79,7 @@ class SettingsActivity : AppCompatActivity(), Preference.OnPreferenceClickListen
             val changelog = findPreference<Preference>("changelog")
             val email = findPreference<Preference>("ask_to_dev")
             val openSource = findPreference<Preference>("open_source")
+            val connectDevice = findPreference<ListPreference>("connectDevice")
 
             gmSansMedium = Typeface.createFromAsset(requireActivity().assets, "fonts/gmsans_medium.otf")
             gmSansBold = Typeface.createFromAsset(requireActivity().assets, "fonts/gmsans_bold.otf")
@@ -99,6 +102,22 @@ class SettingsActivity : AppCompatActivity(), Preference.OnPreferenceClickListen
 
                 true
             }
+
+            val btService = DeviceBTService(activity as Activity)
+            if (btService.deviceState) { // 블루투스가 지원 가능한 기기일 때
+                btService.enableBluetooth() // 블루투스 켜기
+                val devices: ArrayList<String> = btService.BluetoothDevice()
+                connectDevice?.entries = devices.toTypedArray<CharSequence>()
+                connectDevice?.entryValues = devices.toTypedArray<CharSequence>()
+                connectDevice?.summary = connectDevice?.value
+            }
+
+            connectDevice?.setOnPreferenceChangeListener { preference, newValue ->
+                preference.summary = newValue as String
+                true
+            }
+            connectDevice?.summary = connectDevice?.value
+
 //            changelog?.setOnPreferenceClickListener {
 //                MyBottomSheetDialog(requireContext()).apply {
 //                    val view = layoutInflater.inflate(R.layout.dialog_changelog, LinearLayout(requireContext()), false)

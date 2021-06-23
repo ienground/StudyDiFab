@@ -2,10 +2,14 @@ package net.ienlab.study.utils
 
 import android.bluetooth.BluetoothSocket
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import net.ienlab.study.activity.MainActivity
 import net.ienlab.study.activity.TAG
+import net.ienlab.study.activity.TILT_NEW_VALUE
+import net.ienlab.study.activity.TILT_VALUE
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -58,6 +62,11 @@ class ConnectedThread(var socket: BluetoothSocket, var context: Context) : Threa
                             readBufferPosition = 0
 
                             handler!!.obtainMessage(0, str).sendToTarget()
+
+                            val intent = Intent(TILT_NEW_VALUE).apply {
+                                putExtra(TILT_VALUE, str)
+                            }
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
 
                         } else {
                             readBuffer[readBufferPosition++] = data

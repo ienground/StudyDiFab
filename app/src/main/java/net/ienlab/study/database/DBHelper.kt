@@ -17,7 +17,8 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
         sb.append(" CREATE TABLE $_TABLENAME0 ( ")
         sb.append(" $ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
         sb.append(" $TYPE INTEGER, ")
-        sb.append(" $DATETIME LONG )")
+        sb.append(" $DATETIME LONG, ")
+        sb.append(" $STUDYTIME LONG )")
 
         db.execSQL(sb.toString())
     }
@@ -33,14 +34,14 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
 
         val sb = StringBuffer()
         sb.append(" INSERT INTO $_TABLENAME0 ( ")
-        sb.append(" $ID, $TYPE, $DATETIME ) ")
+        sb.append(" $TYPE, $DATETIME, $STUDYTIME ) ")
         sb.append(" VALUES ( ?, ?, ? )")
 
         db.execSQL(sb.toString(),
                 arrayOf(
-                    item.id,
                     item.type,
-                    item.dateTime
+                    item.dateTime,
+                    item.studyTime
                 )
         )
     }
@@ -52,6 +53,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
         value.put(ID, item.id)
         value.put(TYPE, item.type)
         value.put(DATETIME, item.dateTime)
+        value.put(STUDYTIME, item.studyTime)
 
         try {
             db.update(_TABLENAME0, value, "ID=${item.id}", null)
@@ -67,7 +69,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
         calendar.set(Calendar.MILLISECOND, 0)
 
         val sb = StringBuffer()
-        sb.append(" SELECT $ID, $TYPE, $DATETIME FROM $_TABLENAME0 WHERE $DATETIME >= ${calendar.timeInMillis} AND $DATETIME < ${calendar.timeInMillis + 24 * 60 * 60 * 1000} ")
+        sb.append(" SELECT $ID, $TYPE, $DATETIME, $STUDYTIME FROM $_TABLENAME0 WHERE $DATETIME >= ${calendar.timeInMillis} AND $DATETIME < ${calendar.timeInMillis + 24 * 60 * 60 * 1000} ")
 
         val db = readableDatabase
         val cursor = db.rawQuery(sb.toString(), null)
@@ -76,7 +78,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
 
         while (cursor.moveToNext()) {
             with (cursor) {
-                arr.add(TimeData(getInt(0), getInt(1), getLong(2)))
+                arr.add(TimeData(getInt(0), getInt(1), getLong(2), getLong(3)))
             }
         }
 
@@ -86,7 +88,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
 
     fun getDataById(id: Long): TimeData {
         val sb = StringBuffer()
-        sb.append(" SELECT $ID, $TYPE, $DATETIME FROM $_TABLENAME0 FROM $_TABLENAME0 WHERE $ID=$id ")
+        sb.append(" SELECT $ID, $TYPE, $DATETIME, $STUDYTIME FROM $_TABLENAME0 FROM $_TABLENAME0 WHERE $ID=$id ")
 
         val db = readableDatabase
         val cursor = db.rawQuery(sb.toString(), null)
@@ -94,7 +96,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
         var data = TimeData()
         while (cursor.moveToNext()) {
             with (cursor) {
-                data = TimeData(getInt(0), getInt(1), getLong(2))
+                data = TimeData(getInt(0), getInt(1), getLong(2), getLong(3))
             }
         }
 
@@ -104,7 +106,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
 
     fun getAllData(): List<TimeData> {
         val sb = StringBuffer()
-        sb.append(" SELECT $ID, $TYPE, $DATETIME FROM $_TABLENAME0 ")
+        sb.append(" SELECT $ID, $TYPE, $DATETIME, $STUDYTIME FROM $_TABLENAME0 ")
 
         val db = readableDatabase
         val cursor = db.rawQuery(sb.toString(), null)
@@ -113,7 +115,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
 
         while (cursor.moveToNext()) {
             with (cursor) {
-                arr.add(TimeData(getInt(0), getInt(1), getLong(2)))
+                arr.add(TimeData(getInt(0), getInt(1), getLong(2), getLong(3)))
             }
         }
 
@@ -147,8 +149,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
         const val ID = "ID"
         const val TYPE = "TYPE"
         const val DATETIME = "DATETIME"
-//        const val PUBDATE = "PUBDATE"
-//        const val ADDRESS = "ADDRESS"
+        const val STUDYTIME = "STUDYTIME"
     }
 }
 

@@ -45,54 +45,6 @@ class SplashActivity : AppCompatActivity() {
 
         val isFirstVisit = sharedPreferences.getBoolean(SharedKey.IS_FIRST_VISIT, true)
 
-        CoroutineScope(Dispatchers.Main).launch {
-            val btAdapter = BluetoothAdapter.getDefaultAdapter()
-            val bluetoothDevice: MutableMap<String, String> = mutableMapOf()
-            var connectedThread: ConnectedThread?
-
-            if (bluetoothDevice.isNotEmpty()) {
-                bluetoothDevice.clear()
-            }
-            val pairedDevices: Set<BluetoothDevice> = btAdapter.bondedDevices
-
-            if (pairedDevices.isNotEmpty()) {
-                for (device in pairedDevices) {
-                    val deviceName = device.name
-                    val deviceAddress = device.address
-
-                    bluetoothDevice[deviceName] = deviceAddress
-                }
-            }
-
-            val name = "IEN_DUINO"
-            val address = bluetoothDevice[name]
-            var flag = true
-            val device = btAdapter.getRemoteDevice(address)
-            val MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-
-            Toast.makeText(applicationContext, "trying to connect ${name}..", Toast.LENGTH_SHORT).show()
-
-            var btSocket: BluetoothSocket? = null
-
-            try {
-                withContext(Dispatchers.IO) {
-                    btSocket = device.createRfcommSocketToServiceRecord(MY_UUID)
-                    btSocket?.connect()
-                }
-
-                if (flag) {
-                    Toast.makeText(applicationContext, "connected to $name", Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, "connectedThread start")
-                    connectedThread = ConnectedThread(btSocket!!, applicationContext)
-                    connectedThread.start()
-                }
-            } catch (e: IOException) {
-                flag = false
-                Toast.makeText(applicationContext, "Connection Failed", Toast.LENGTH_SHORT).show()
-            }
-
-        }
-
         Handler(Looper.getMainLooper()).postDelayed({
             val mainIntent = Intent(this, MainActivity::class.java)
             val welcomeIntent = Intent(this, MainActivity::class.java)

@@ -6,4 +6,28 @@
         android:key="app_title"
         android:layout="@layout/preference_app_info"/>
 
+    <SeekBarPreference
+        android:key="gapThreshold"
+        android:title="@string/sensitivity"
+        android:max="10"
+        android:defaultValue="7"/>
+
+    <CheckBoxPreference
+        android:key="beepWhenSnooze"
+        android:title="@string/title_noti_phone"
+        android:summaryOn="@string/summary_on_noti_phone"
+        android:summaryOff="@string/summary_off_on_noti_phone"
+        android:defaultValue="false" />
+
+    <ListPreference
+        android:key="connectDevice"
+        android:title="@string/connect_with"
+        android:entries="@array/device"
+        android:entryValues="@array/device"/>
+
+    <EditTextPreference
+        android:key="angle"
+        android:title="@string/neck_angle"
+        android:defaultValue="60" />
+
 </PreferenceScreen>

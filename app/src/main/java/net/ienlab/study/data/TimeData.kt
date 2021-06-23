@@ -4,17 +4,20 @@ class TimeData {
     var id: Int
     var type: Int
     var dateTime: Long
+    var studyTime: Long
 
     constructor() {
         id = -1
         type = -1
         dateTime = 0L
+        studyTime = 0L
     }
 
-    constructor(id: Int, type: Int, dateTime: Long) {
+    constructor(id: Int, type: Int, dateTime: Long, studyTime: Long) {
         this.id = id
         this.type = type
         this.dateTime = dateTime
+        this.studyTime = studyTime
     }
 
     companion object {

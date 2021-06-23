@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import net.ienlab.study.R
 import net.ienlab.study.data.TimeData
+import net.ienlab.study.database.DBHelper
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -35,13 +36,26 @@ class MainDataAdapter(var items: ArrayList<TimeData>): RecyclerView.Adapter<Main
             TimeData.TYPE_SNOOZE -> {
                 holder.icon.setImageResource(R.drawable.ic_snooze)
                 holder.tvTitle.text = context.getString(R.string.title_snooze)
+                holder.tvContent.text = context.getString(R.string.msg_snooze)
             }
 
             else -> {
                 holder.icon.setImageResource(R.drawable.ic_book)
                 holder.tvTitle.text = context.getString(R.string.title_study)
+                holder.tvContent.text = if (items[position].studyTime < 60) {
+                    context.getString(R.string.msg_study_second, items[position].studyTime)
+                } else {
+                    context.getString(R.string.msg_study_minute_second, items[position].studyTime / 60, items[position].studyTime % 60)
+                }
             }
         }
+    }
+
+    fun addItem(item: TimeData, dbHelper: DBHelper) {
+        dbHelper.addItem(item)
+        items.add(0, item)
+//        items.sortWith(compareBy({ it.hourOfDay }, { it.minute }))
+        notifyItemInserted(0)
     }
 
     inner class ItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

@@ -11,7 +11,7 @@ import java.io.UnsupportedEncodingException
 class BluetoothHandler: Handler(Looper.getMainLooper()) {
     override fun handleMessage(msg: Message) {
         try {
-            Log.d(TAG, msg.obj as String)
+//            Log.d(TAG, msg.obj as String)
         } catch (e: UnsupportedEncodingException) {
             e.printStackTrace()
         }

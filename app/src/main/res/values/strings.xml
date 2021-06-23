@@ -7,5 +7,14 @@
     <string name="icon">아이콘</string>
     <string name="title_snooze">졸았어요</string>
     <string name="title_study">잘 공부하고 있어요!</string>
+    <string name="msg_snooze">졸지 않고 열심히 공부하세요</string>
+    <string name="msg_study_second">%1$d초 집중했어요</string>
+    <string name="msg_study_minute_second">%1$d분 %2$d초 집중했어요</string>
+    <string name="sensitivity">민감도 설정</string>
+    <string name="title_noti_phone">졸았을 때 스마트폰에서 알림</string>
+    <string name="summary_on_noti_phone">졸았을 때 스마트폰에서 알림 소리를 발생합니다.</string>
+    <string name="summary_off_on_noti_phone">졸았을 때 스마트폰에서 알림 소리를 발생하지 않습니다.</string>
+    <string name="connect_with">연결할 기기 선택..</string>
+    <string name="neck_angle">목 각도</string>
 
 </resources>
