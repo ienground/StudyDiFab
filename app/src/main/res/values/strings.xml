@@ -11,10 +11,18 @@
     <string name="msg_study_second">%1$d초 집중했어요</string>
     <string name="msg_study_minute_second">%1$d분 %2$d초 집중했어요</string>
     <string name="sensitivity">민감도 설정</string>
-    <string name="title_noti_phone">졸았을 때 스마트폰에서 알림</string>
-    <string name="summary_on_noti_phone">졸았을 때 스마트폰에서 알림 소리를 발생합니다.</string>
-    <string name="summary_off_on_noti_phone">졸았을 때 스마트폰에서 알림 소리를 발생하지 않습니다.</string>
+    <string name="title_noti_phone">졸았을 때 30분 후 리마인더</string>
+    <string name="summary_on_noti_phone">졸았을 때 30분 이후 공부가 시작되지 않으면 알림을 울립니다.</string>
+    <string name="summary_off_on_noti_phone">졸았을 때 30분 이후 공부가 시작되지 않아도 알림을 울리지 않습니다..</string>
     <string name="connect_with">연결할 기기 선택..</string>
     <string name="neck_angle">목 각도</string>
+    <string name="title_piezo">졸 때 소리로 알림</string>
+    <string name="summary_on_piezo">졸 때 소리로 경고음을 재생합니다.</string>
+    <string name="summary_off_piezo">졸 때 소리로 경고음을 재생하지 않습니다.</string>
+    <string name="study_remind">공부 리마인드</string>
+    <string name="title_study_remind">다시 공부할 때가 됐어요!</string>
+    <string name="message_study_remind">꾸벅꾸벅 졸아도 30분이면 깰 때가 됐어요</string>
+    <string name="date_format">yyyy년 M월 d일</string>
+    <string name="please_input">입력하세요</string>
 
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <net.ienlab.study.preference.AppInfoPreference
         android:key="app_title"
@@ -17,7 +18,14 @@
         android:title="@string/title_noti_phone"
         android:summaryOn="@string/summary_on_noti_phone"
         android:summaryOff="@string/summary_off_on_noti_phone"
-        android:defaultValue="false" />
+        android:defaultValue="true" />
+
+    <CheckBoxPreference
+        android:key="piezo"
+        android:title="@string/title_piezo"
+        android:summaryOn="@string/summary_on_piezo"
+        android:summaryOff="@string/summary_off_piezo"
+        android:defaultValue="true" />
 
     <ListPreference
         android:key="connectDevice"
@@ -25,9 +33,13 @@
         android:entries="@array/device"
         android:entryValues="@array/device"/>
 
-    <EditTextPreference
+    <Preference
         android:key="angle"
         android:title="@string/neck_angle"
-        android:defaultValue="60" />
+        android:defaultValue="60"
+        app:useSimpleSummaryProvider="true"/>
+
+<!--    존 시간-->
+
 
 </PreferenceScreen>

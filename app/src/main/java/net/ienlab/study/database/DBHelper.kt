@@ -78,7 +78,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
 
         while (cursor.moveToNext()) {
             with (cursor) {
-                arr.add(TimeData(getInt(0), getInt(1), getLong(2), getLong(3)))
+                arr.add(TimeData(getInt(0), getInt(1), getLong(2), getLong(3), TimeData.VIEWTYPE_NOTI))
             }
         }
 
@@ -96,7 +96,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
         var data = TimeData()
         while (cursor.moveToNext()) {
             with (cursor) {
-                data = TimeData(getInt(0), getInt(1), getLong(2), getLong(3))
+                data = TimeData(getInt(0), getInt(1), getLong(2), getLong(3), TimeData.VIEWTYPE_NOTI)
             }
         }
 
@@ -115,7 +115,7 @@ class DBHelper(context: Context, name: String, version: Int) : SQLiteOpenHelper(
 
         while (cursor.moveToNext()) {
             with (cursor) {
-                arr.add(TimeData(getInt(0), getInt(1), getLong(2), getLong(3)))
+                arr.add(TimeData(getInt(0), getInt(1), getLong(2), getLong(3), TimeData.VIEWTYPE_NOTI))
             }
         }
 

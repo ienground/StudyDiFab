@@ -8,5 +8,7 @@ class SharedKey {
         const val GAP_THRESHOLD = "gapThreshold"
         const val CONNECT_DEVICE = "connectDevice"
         const val NECK_ANGLE = "angle"
+        const val PIEZO = "piezo"
+        const val ALARM_WHEN_SNOOZE = "beepWhenSnooze"
     }
 }

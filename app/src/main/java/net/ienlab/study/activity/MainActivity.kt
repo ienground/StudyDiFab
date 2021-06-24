@@ -1,9 +1,12 @@
 package net.ienlab.study.activity
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.*
+import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +27,7 @@ import net.ienlab.study.constant.SharedKey
 import net.ienlab.study.data.TimeData
 import net.ienlab.study.database.DBHelper
 import net.ienlab.study.databinding.ActivityMainBinding
+import net.ienlab.study.receiver.AlarmReceiver
 import net.ienlab.study.utils.ConnectedThread
 import java.io.IOException
 import java.lang.NumberFormatException
@@ -41,18 +45,16 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var dbHelper: DBHelper
     lateinit var sharedPreferences: SharedPreferences
-    private lateinit var settingsActivityLauncher: ActivityResultLauncher<Intent>
+    lateinit var am: AlarmManager
+
+    lateinit var gmSansBold: Typeface
+    lateinit var gmSansMedium: Typeface
 
     var time = 0L
     var todayTime = 0L
     var isTimerOn = false
-    val tiltValueArray: ArrayList<Int> = arrayListOf()
-    var gapThreshold = 1f
-    var beforeTiltValue = -9999
-    var beforeTiltAvgValue = -9999f
     var startAngle = -999
     var count = 0
-    var gapAngle = 0
 
     var connectedThread: ConnectedThread? = null
 
@@ -66,18 +68,35 @@ class MainActivity : AppCompatActivity() {
 
         dbHelper = DBHelper(this, DBHelper.dbName, DBHelper.dbVersion)
         sharedPreferences = getSharedPreferences("${packageName}_preferences", Context.MODE_PRIVATE)
+        am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        gapAngle = (sharedPreferences.getString(SharedKey.NECK_ANGLE, "15") ?: "15      ").toInt()
-//        gapThreshold = sharedPreferences.getInt(SharedKey.GAP_THRESHOLD, 7) / 2f
+        gmSansMedium = Typeface.createFromAsset(assets, "fonts/gmsans_medium.otf")
+        gmSansBold = Typeface.createFromAsset(assets, "fonts/gmsans_bold.otf")
 
-        settingsActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-//            gapThreshold = sharedPreferences.getInt(SharedKey.GAP_THRESHOLD, 7) / 2f
+        binding.time.typeface = gmSansBold
+        binding.todayTime.typeface = gmSansMedium
+
+        val c = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }
 
         val data = dbHelper.getAllData() as ArrayList
-        data.sortByDescending { it.dateTime }
+        data.sortBy { it.dateTime }
         for (value in data) {
-            todayTime += value.studyTime
+            val date = Calendar.getInstance().apply {
+                timeInMillis = value.dateTime
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+
+            if (c.timeInMillis == date.timeInMillis) {
+                todayTime += value.studyTime
+            }
         }
 
         if (todayTime >= 3600) {
@@ -134,7 +153,27 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        val lastCalendar = Calendar.getInstance().apply { timeInMillis = 0 }
+        for (i in data.lastIndex downTo 0) {
+            val calendar = Calendar.getInstance().apply {
+                timeInMillis = data[i].dateTime
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+
+            if (lastCalendar.timeInMillis == 0L) lastCalendar.timeInMillis = calendar.timeInMillis
+            if (lastCalendar.timeInMillis != calendar.timeInMillis || i == data.lastIndex) {
+                data.add(i + 1, TimeData(-1, -1, calendar.timeInMillis, 0, TimeData.VIEWTYPE_DATE))
+                lastCalendar.timeInMillis = calendar.timeInMillis
+            }
+        }
+
+        data.reverse()
+
         val adapter = MainDataAdapter(data)
+
         binding.recyclerView.adapter = adapter
 
         val timer = Timer()
@@ -173,20 +212,12 @@ class MainActivity : AppCompatActivity() {
 
                         val gap = (abs(startAngle - value) + 180) % 360 - 180
 
-                        if (abs(gap) >= gapAngle) {
+                        if (abs(gap) >= sharedPreferences.getInt(SharedKey.NECK_ANGLE, 15)) {
                             count++
                         }
-
-                        Log.d(TAG, "current: $value, $gap, $count")
-                    } else {
-                        Log.d(TAG, "current: $value, off, $count")
                     }
 
-
-
-
-
-                    if (count >= 10 * 4 && isTimerOn) {
+                    if (count >= 10 * 4 && isTimerOn) { // 4초동안 졸았다, 알림 예약
                         // 시간 기록 종료
                         if (connectedThread != null) {
                             connectedThread?.write("x")
@@ -194,33 +225,17 @@ class MainActivity : AppCompatActivity() {
 
                         isTimerOn = false
 
-                        val item = TimeData(-1, TimeData.TYPE_STUDY_TIME, System.currentTimeMillis() - 1000, time)
-                        val sleepItem = TimeData(-1, TimeData.TYPE_SNOOZE, System.currentTimeMillis(), -1)
+                        val item = TimeData(-1, TimeData.TYPE_STUDY_TIME, System.currentTimeMillis() - 1000, time, TimeData.VIEWTYPE_NOTI)
+                        val sleepItem = TimeData(-1, TimeData.TYPE_SNOOZE, System.currentTimeMillis(), -1, TimeData.VIEWTYPE_NOTI)
                         adapter.addItem(item, dbHelper)
                         adapter.addItem(sleepItem, dbHelper)
                         binding.recyclerView.scrollToPosition(0)
+
+                        if (sharedPreferences.getBoolean(SharedKey.ALARM_WHEN_SNOOZE, true)) {
+                            val alarmIntent = Intent(applicationContext, AlarmReceiver::class.java)
+                            am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, PendingIntent.getBroadcast(applicationContext, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT))
+                        }
                     }
-
-//                    beforeTiltValue = value
-//                    tiltValueArray.add(gap)
-
-//                    val avg = if (tiltValueArray.size >= 10) {
-//                        var sum = 0
-//                        for (i in 0 until 10) {
-//                            sum += tiltValueArray[tiltValueArray.lastIndex - i]
-//                        }
-//                        sum / 20f
-//                    } else {
-//                        var sum = 0
-//                        for (v in tiltValueArray) {
-//                            sum += v
-//                        }
-//                        sum / tiltValueArray.size.toFloat()
-//                    }
-
-//                    val avgGap = if (beforeTiltAvgValue != -9999f) abs(avg - beforeTiltAvgValue) else 0f
-//                    Log.d(TAG, "current: $value, $avg, $beforeTiltAvgValue, $avgGap")
-//                    beforeTiltAvgValue = avg
 
                 } catch (e: NumberFormatException) {
                     e.printStackTrace()
@@ -243,18 +258,16 @@ class MainActivity : AppCompatActivity() {
 
                 if (connectedThread != null) {
                     connectedThread?.write("x")
+
+                    if (sharedPreferences.getBoolean(SharedKey.PIEZO, true)) {
+                        connectedThread?.write("p")
+                    }
                 }
 
-                val item = TimeData(-1, TimeData.TYPE_STUDY_TIME, System.currentTimeMillis() - 1000, time)
-                val sleepItem = TimeData(-1, TimeData.TYPE_SNOOZE, System.currentTimeMillis(), -1)
+                val item = TimeData(-1, TimeData.TYPE_STUDY_TIME, System.currentTimeMillis() - 1000, time, TimeData.VIEWTYPE_NOTI)
                 adapter.addItem(item, dbHelper)
-                adapter.addItem(sleepItem, dbHelper)
                 binding.recyclerView.scrollToPosition(0)
             }
-        }
-
-        binding.time.setOnLongClickListener {
-            true
         }
     }
 
@@ -266,7 +279,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_settings -> {
-                settingsActivityLauncher.launch(Intent(this, SettingsActivity::class.java))
+                startActivity(Intent(this, SettingsActivity::class.java))
             }
         }
         return super.onOptionsItemSelected(item)
