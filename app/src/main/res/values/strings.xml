@@ -1,5 +1,5 @@
 <resources>
-    <string name="this_app_name">Study</string>
+    <string name="this_app_name">스누즈 보이콧</string>
 
     <!--Preferences-->
     <string name="dev_ienlab">Designed, Developed By ienlab\nInstagram : @ienlab</string>

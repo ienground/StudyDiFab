@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.time.typeface = gmSansBold
         binding.todayTime.typeface = gmSansMedium
+        binding.title.typeface = gmSansBold
 
         val c = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)
@@ -257,10 +258,10 @@ class MainActivity : AppCompatActivity() {
                 isTimerOn = false
 
                 if (connectedThread != null) {
-                    connectedThread?.write("x")
-
                     if (sharedPreferences.getBoolean(SharedKey.PIEZO, true)) {
-                        connectedThread?.write("p")
+                        connectedThread?.write("z")
+                    } else {
+                        connectedThread?.write("x")
                     }
                 }
 
